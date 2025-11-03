@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Play, Pause, Square, Settings, Plus, Minus } from "lucide-react";
+import { Play, Pause, Square, Settings } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/dialog";
 import { Label } from "./components/ui/label";
@@ -102,10 +102,6 @@ export default function App() {
     setTimeLeft(sessionDuration * 60);
   };
 
-  const handleAddMinute = () => {
-    setTimeLeft((prev) => prev + 60);
-  };
-
   const handleSaveSettings = (sessionMins: number, breakMins: number) => {
     setSessionDuration(sessionMins);
     setBreakDuration(breakMins);
@@ -146,11 +142,7 @@ export default function App() {
       
       <div className="w-full max-w-2xl flex flex-col items-center relative z-10">
         {/* Tomato Visualization - Centered */}
-        <div className="relative mb-8 group cursor-pointer" onClick={() => {
-          if (!isRunning) {
-            toast.info("Start the timer to grow your tomato! 🍅");
-          }
-        }}>
+        <div className="relative mb-8 group cursor-pointer" onClick={handlePlayPause}>
           <TomatoSVG fillLevel={fillLevel} mode={mode} isRunning={isRunning} />
           
           {/* Sparkles effect when running */}
@@ -170,30 +162,24 @@ export default function App() {
           )}
         </div>
 
-        {/* Timer Display - Glass morphism */}
-        <div className="glass-card px-12 py-6 flex items-center gap-6 mb-6 w-full max-w-lg justify-center">
-          <Button
-            onClick={handleAddMinute}
-            size="lg"
-            variant="ghost"
-            className="glass-button-secondary w-14 h-14"
-          >
-            <Plus className="w-5 h-5 text-orange-700" />
-          </Button>
-          
-          <div className="text-orange-700 text-7xl tracking-tight font-outfit">
-            {formatTime(timeLeft)}
-          </div>
-          
-          <Button
-            onClick={handleAddMinute}
-            size="lg"
-            variant="ghost"
-            className="glass-button-secondary w-14 h-14"
-          >
-            <Minus className="w-5 h-5 text-orange-700" />
-          </Button>
-        </div>
+        {/* Timer Display - Editable */}
+        <Input
+          type="text"
+          value={formatTime(timeLeft)}
+          onChange={(e) => {
+            const value = e.target.value;
+            const match = value.match(/^(\d{1,2}):(\d{2})$/);
+            if (match) {
+              const mins = parseInt(match[1]);
+              const secs = parseInt(match[2]);
+              if (mins >= 0 && mins <= 99 && secs >= 0 && secs <= 59) {
+                setTimeLeft(mins * 60 + secs);
+              }
+            }
+          }}
+          className="text-orange-700 text-7xl tracking-tight font-outfit text-center border-none bg-transparent shadow-none mb-6 w-auto max-w-md focus-visible:ring-0 focus-visible:ring-offset-0"
+          disabled={isRunning}
+        />
 
         {/* Controls - Glass morphism */}
         <div className="flex items-center justify-center gap-4 mb-6">
@@ -319,29 +305,6 @@ function TomatoSVG({ fillLevel, mode, isRunning }: { fillLevel: number; mode: Ti
         </linearGradient>
       </defs>
 
-      {/* Progress ring */}
-      <circle
-        cx="250"
-        cy="280"
-        r="160"
-        fill="none"
-        stroke="rgba(239, 68, 68, 0.2)"
-        strokeWidth="8"
-      />
-      <circle
-        cx="250"
-        cy="280"
-        r="160"
-        fill="none"
-        stroke={mode === "session" ? "#EF4444" : "#F59E0B"}
-        strokeWidth="8"
-        strokeDasharray={`${2 * Math.PI * 160}`}
-        strokeDashoffset={`${2 * Math.PI * 160 * (1 - fillLevel / 100)}`}
-        strokeLinecap="round"
-        transform="rotate(-90 250 280)"
-        className="transition-all duration-1000"
-      />
-
       {/* Main tomato body */}
       <circle
         cx="250"
@@ -433,21 +396,6 @@ function TomatoSVG({ fillLevel, mode, isRunning }: { fillLevel: number; mode: Ti
           <circle cx="250" cy="210" r="2" fill="#FDE047" className="animate-sparkle-slow" />
         </>
       )}
-
-      {/* Timer display inside tomato */}
-      <text
-        x="250"
-        y="430"
-        textAnchor="middle"
-        fill={mode === "session" ? "#DC2626" : "#F59E0B"}
-        className="text-sm"
-      >
-        {fillLevel === 0 && "Ready to grow!"}
-        {fillLevel > 0 && fillLevel < 30 && "🌱 Sprouting..."}
-        {fillLevel >= 30 && fillLevel < 60 && "🌿 Growing..."}
-        {fillLevel >= 60 && fillLevel < 100 && "🍅 Ripening..."}
-        {fillLevel === 100 && "✓ Fully ripe!"}
-      </text>
     </svg>
   );
 }
