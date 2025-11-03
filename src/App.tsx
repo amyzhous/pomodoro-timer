@@ -163,7 +163,7 @@ export default function App() {
         </div>
 
         {/* Timer Display - Editable with Glass Effect */}
-        <div className="glass-card px-16 py-8 mb-6">
+        <div className="glass-card px-8 py-6 mb-6 inline-block">
           <Input
             type="text"
             value={formatTime(timeLeft)}
@@ -178,8 +178,8 @@ export default function App() {
                 }
               }
             }}
-            className="text-orange-700 text-center border-none bg-transparent shadow-none w-auto focus-visible:ring-0 focus-visible:ring-offset-0 font-outfit tracking-tight"
-            style={{ fontSize: '8rem' }}
+            className="text-orange-700 text-center border-none bg-transparent shadow-none w-auto focus-visible:ring-0 focus-visible:ring-offset-0 font-outfit tracking-tight p-0"
+            style={{ fontSize: '8rem', lineHeight: '1.1', height: 'auto' }}
             disabled={isRunning}
           />
         </div>
