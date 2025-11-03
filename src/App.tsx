@@ -177,7 +177,8 @@ export default function App() {
               }
             }
           }}
-          className="text-orange-700 text-7xl tracking-tight font-outfit text-center border-none bg-transparent shadow-none mb-6 w-auto max-w-md focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="text-orange-700 text-center border-none bg-transparent shadow-none mb-6 w-auto focus-visible:ring-0 focus-visible:ring-offset-0 font-outfit tracking-tight"
+          style={{ fontSize: '8rem' }}
           disabled={isRunning}
         />
 
@@ -278,8 +279,8 @@ function TomatoSVG({ fillLevel, mode, isRunning }: { fillLevel: number; mode: Ti
 
   return (
     <svg
-      width="500"
-      height="500"
+      width="700"
+      height="700"
       viewBox="0 0 500 500"
       className={`drop-shadow-2xl transition-transform duration-500 ${isRunning ? '' : 'group-hover:scale-105'}`}
       style={{ transform: `scale(${scale})` }}
