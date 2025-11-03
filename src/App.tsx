@@ -162,25 +162,27 @@ export default function App() {
           )}
         </div>
 
-        {/* Timer Display - Editable */}
-        <Input
-          type="text"
-          value={formatTime(timeLeft)}
-          onChange={(e) => {
-            const value = e.target.value;
-            const match = value.match(/^(\d{1,2}):(\d{2})$/);
-            if (match) {
-              const mins = parseInt(match[1]);
-              const secs = parseInt(match[2]);
-              if (mins >= 0 && mins <= 99 && secs >= 0 && secs <= 59) {
-                setTimeLeft(mins * 60 + secs);
+        {/* Timer Display - Editable with Glass Effect */}
+        <div className="glass-card px-16 py-8 mb-6">
+          <Input
+            type="text"
+            value={formatTime(timeLeft)}
+            onChange={(e) => {
+              const value = e.target.value;
+              const match = value.match(/^(\d{1,2}):(\d{2})$/);
+              if (match) {
+                const mins = parseInt(match[1]);
+                const secs = parseInt(match[2]);
+                if (mins >= 0 && mins <= 99 && secs >= 0 && secs <= 59) {
+                  setTimeLeft(mins * 60 + secs);
+                }
               }
-            }
-          }}
-          className="text-orange-700 text-center border-none bg-transparent shadow-none mb-6 w-auto focus-visible:ring-0 focus-visible:ring-offset-0 font-outfit tracking-tight"
-          style={{ fontSize: '8rem' }}
-          disabled={isRunning}
-        />
+            }}
+            className="text-orange-700 text-center border-none bg-transparent shadow-none w-auto focus-visible:ring-0 focus-visible:ring-offset-0 font-outfit tracking-tight"
+            style={{ fontSize: '8rem' }}
+            disabled={isRunning}
+          />
+        </div>
 
         {/* Controls - Glass morphism */}
         <div className="flex items-center justify-center gap-4 mb-6">
@@ -227,39 +229,11 @@ export default function App() {
 
         {/* Music Indicator */}
         {mode === "session" && isMusicPlaying && (
-          <div className="text-center mb-6 text-orange-600 text-sm flex items-center justify-center gap-2">
+          <div className="text-center text-orange-600 text-sm flex items-center justify-center gap-2">
             <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
             Lo-fi music playing
           </div>
         )}
-
-        {/* Stats panel - Stacked below */}
-        <div className="w-full glass-card p-8">
-          <h2 className="text-orange-700 text-2xl mb-6 font-outfit">🍅 Tomatoes Grown</h2>
-
-          {/* Current session in progress */}
-          {isRunning && (
-            <div className="glass-item mb-3">
-              <p className="text-orange-700 text-sm">🌱 Tomato growing...</p>
-            </div>
-          )}
-
-          {/* Completed sessions */}
-          {sessionsCompleted === 0 && !isRunning && (
-            <div className="glass-item">
-              <p className="text-orange-600 text-sm">No tomatoes yet. Start growing! 🌱</p>
-            </div>
-          )}
-
-          <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar">
-            {Array.from({ length: sessionsCompleted }, (_, i) => (
-              <div key={i} className="glass-item">
-                <p className="text-orange-700 text-sm mb-1 font-outfit">🍅 Tomato #{i + 1}</p>
-                <p className="text-orange-600 text-xs opacity-70">Fully ripened ✓</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
